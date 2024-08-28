@@ -1,7 +1,7 @@
 # EXTENSIONES A ELIMINAR
 *.pdf
 *.log
-*.synctex
+*.synctex(busy)
 *.synctex.gz
 *.out
 *.aux
