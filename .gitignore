@@ -1,0 +1,10 @@
+# EXTENSIONES A ELIMINAR
+*.pdf
+*.log
+*.synctex
+*.synctex.gz
+*.out
+*.aux
+*.bbl
+*.blg
+*.zip
