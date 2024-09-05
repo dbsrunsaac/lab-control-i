@@ -17,58 +17,96 @@
 \usepackage{xcolor}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+% Gráficas en MATLAB
+\usepackage{tikz, pgfplots}
+% Color Enlace
+\definecolor{colorEnlace}{RGB}{0, 0, 0}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=colorEnlace,
+	citecolor=colorEnlace,
+	urlcolor=colorEnlace,
+	pdfauthor={Davis Bremdow Salazar Roa},
+	pdftitle={Introducción a LaTeX}
+}
 \begin{document}
 
 \title{Experiencia N°0 - Introducción a \LaTeX}
 % Ing. Diego Darcy Arredondo Huarac
 \author{\IEEEauthorblockN{Davis Bremdow Salazar Roa}
-\IEEEauthorblockA{\textit{Departamento Académico de Ingeniería Electrónica} \\
+\IEEEauthorblockA{Universidad Nacional de San Antonio Abad del Cusco}
+\textit{Escuela Profesional de Ingeniería Electrónica}
 \textit{Laboratorio de Control I}\\
 200353 \\
 Cusco, Perú}
-}
 
 \maketitle
 
 \begin{abstract}
-En la actualidad, instalar un sonar de ecolocalización en un laboratorio de electrónica resulta complicado debido a los elevados costos asociados. Por ello, se propone la creación de un sonar básico utilizando tecnologías ágiles como Arduino para llevar a cabo este proyecto. Además, se utilizará un servomotor y un sensor ultrasónico para detectar la distancia a los objetos. Arduino gestionará los movimientos del servomotor, limitados entre 15 y 165 grados, y enviará los datos al ordenador a través del puerto serie. Estos datos serán procesados y visualizados con el software Processing.
+El giroscopio es un dispositivo clave en múltiples campos, como la navegación, la aeronáutica, y la robótica, gracias a su capacidad para medir y mantener la orientación. Basado en el principio de conservación del momento angular, ha evolucionado desde su versión mecánica hasta incluir variantes ópticas y MEMS, adaptándose a nuevas aplicaciones. La investigación actual se centra en mejorar su precisión, miniaturización y robustez, impulsando su uso en dispositivos móviles y sistemas autónomos. Esta investigación examina los principios de funcionamiento, aplicaciones recientes e innovaciones tecnológicas que fortalecen su relevancia en la ciencia y la ingeniería modernas.
 \end{abstract}
 
 \begin{IEEEkeywords}
 Arduino, software de procesamiento, sonar, sensor ultrasónico, servomotor.
 \end{IEEEkeywords}
 
-\section{Introduction}
-El sonar de ecolocalización tiene una historia que se remonta a la Segunda Guerra Mundial, donde se usó para localizar la posición del enemigo y medir distancias a objetivos en la marina \cite{ecolocalizacion}. Este sistema complejo involucra elementos como procesamiento de señales, análisis de datos, detección y estimación de parámetros. Su presencia en laboratorios de telecomunicaciones es crucial, ya que ofrece múltiples beneficios educativos, como el estudio de la localización de objetos, el seguimiento de objetos en movimiento y el procesamiento de imágenes. No obstante, la implementación de un sonar en laboratorios es costosa. Por ello, el objetivo de esta investigación es desarrollar un sonar básico utilizando tecnologías contemporáneas, para que pueda ser utilizado en los laboratorios de las instituciones interesadas. 
+\section{Introducción}
+El giroscopio es un dispositivo mecánico que ha revolucionado numerosos campos de la ciencia y la tecnología debido a su capacidad para medir y mantener la orientación. Originalmente inventado en el siglo XIX, este instrumento ha encontrado aplicaciones fundamentales en áreas como la navegación, la aeronáutica, la exploración espacial y la robótica. Un giroscopio funciona en base al principio de conservación del momento angular, permitiendo detectar cambios en la orientación a través de la rotación de un rotor montado en un sistema de suspensión o cardán. A lo largo del tiempo, se han desarrollado diversas variantes de giroscopios, desde los tradicionales mecánicos hasta los giroscopios ópticos y MEMS (Micro-Electro-Mechanical Systems), cada uno con características y aplicaciones específicas. \cite{ecolocalizacion}
 
-El proyecto se enfoca en desarrollar un sonar básico utilizando tecnologías ágiles como Arduino, destinado a laboratorios de universidades e instituciones interesadas. Para ello, se emplearán componentes como Arduino, un sensor ultrasónico, un servomotor y un zumbador. Este sistema puede detectar objetos mediante pulsos ultrasónicos y visualizar la información en una computadora. Además, se busca implementar esta tecnología en un laboratorio educativo con recursos económicos para promover el aprendizaje en universidades.
+La investigación actual sobre giroscopios se centra en mejorar su precisión, miniaturización, costo y robustez, especialmente en el contexto de su integración en dispositivos móviles y sistemas de navegación autónoma. Esta investigación explora los principios de funcionamiento de los diferentes tipos de giroscopios, sus aplicaciones más recientes y las innovaciones tecnológicas que están moldeando su evolución. El objetivo es proporcionar una comprensión profunda de cómo los giroscopios continúan desempeñando un papel crucial en la tecnología moderna y en el avance de diversas disciplinas científicas e ingenieriles
 
 \section{Metodología}
 
-El proyecto se fundamenta en los principios esenciales del sonar, que consisten en emitir una onda electromagnética o acústica y detectar su eco reflejado desde una superficie distante. La señal del sonar se genera en el transmisor, se dirige hacia un objeto y se refleja de vuelta hacia el receptor. Este receptor procesa la señal y recopila información como la distancia, velocidad, dirección y características del objeto detectado \cite{rosales2017diseno, alvarez2015sistema, diaz2005modelado}.
+El proyecto se fundamenta en los principios esenciales del giroscopio. Un giroscopio es un dispositivo que mide y mantiene la orientación de un objeto en el espacio. Su funcionamiento se basa en el principio de conservación del momento angular: un rotor o disco, que gira a gran velocidad alrededor de su eje, tiende a resistir cambios en su orientación debido a su inercia. Cuando el giroscopio se mueve o se inclina, su rotor continúa girando en la misma dirección, lo que permite detectar variaciones en la posición o movimiento. Este principio es utilizado en sistemas de navegación, estabilización y orientación en aplicaciones que van desde aeronaves hasta dispositivos móviles.  \cite{rosales2017diseno, alvarez2015sistema, diaz2005modelado}.
 
-\section{Prepare Your Paper Before Styling}
-Before you begin to format your paper, first write and save the content as a 
-separate text file. Complete all content and organizational editing before 
-formatting. Please note sections \ref{AA}--\ref{SCM} below for more information on 
-proofreading, spelling and grammar.
+\section{Marco Teórico}
+El marco teórico para el estudio del giroscopio se fundamenta en conceptos clave de la física como el momento angular, el rotor, la velocidad angular e inercia, que explican su funcionamiento y aplicaciones en diferentes campos como se detallan en: \ref{AA}--\ref{SCM}.
 
-Keep your text and graphic files separate until after the text has been 
-formatted and styled. Do not number text heads---{\LaTeX} will do that 
-for you.
+\subsection{Momento Angular}
+
+El momento angular es una magnitud vectorial que describe la cantidad de rotación de un objeto en movimiento. Se define como el producto de la inercia rotacional del objeto y su velocidad angular. En un sistema aislado, el momento angular se conserva, es decir, permanece constante a menos que actúe una fuerza externa. Este principio es fundamental en el funcionamiento de un giroscopio, ya que permite al dispositivo mantener su orientación cuando el rotor está en movimiento.
+
+\subsection{Rotor}
+
+El rotor es la parte central del giroscopio, un disco o cilindro que gira a gran velocidad alrededor de un eje fijo. La rotación del rotor genera momento angular, lo cual da al giroscopio su capacidad de mantener su orientación. Cuanto más rápido gira el rotor, mayor es el momento angular, lo que aumenta la estabilidad del giroscopio frente a cambios de orientación externos.
+
+\subsection{Velocidad Angular}
+
+La velocidad angular es la medida de la rapidez con la que un objeto rota alrededor de un eje y se expresa en radianes por segundo (rad/s). En un giroscopio, la velocidad angular del rotor determina la magnitud del momento angular. Una alta velocidad angular implica un mayor momento angular, lo que a su vez ofrece mayor resistencia a los cambios en la dirección de la rotación.
+
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=9cm]{imagenes/sonar.png}
-\caption{Example of a figure caption.}
-\label{fig1}
+\includegraphics[width=9cm]{imagenes/gyroscopio.png}
+\caption{Giroscopio}
+\label{giroscopio}
 \end{figure}
 
-\subsection{Abbreviations and Acronyms}\label{AA}
+\subsection{Relación Estabilidad - $\Delta$ Angulo }\label{AA}
 Define abbreviations and acronyms the first time they are used in the text, 
 even after they have been defined in the abstract. Abbreviations such as 
 IEEE, SI, MKS, CGS, ac, dc, and rms do not have to be defined. Do not use 
 abbreviations in the title or heads unless they are unavoidable.
+
+\begin{figure}[h!]
+	\centering
+	\begin{tikzpicture}[scale=1.2]
+		\begin{axis}[
+			xmin=-5, xmax=5,
+			ymin=-5, ymax=5,
+			axis x line=center, 
+			axis y line=center, 
+			xlabel=$x$, ylabel=$y$,
+			xlabel style={at={(ticklabel* cs:1.05)}},
+			ylabel style={at={(ticklabel* cs:1.05)}}
+			]
+			\addplot[red!80!white,thick,
+			samples=200,domain=-3:3]
+			{x^4-0.5*x^3-2*x^2-x+1};
+		\end{axis}
+	\end{tikzpicture}
+	\caption{Relación de pertenencia "Alta"}
+\end{figure}
 
 \subsection{Units}
 \begin{itemize}
@@ -85,7 +123,7 @@ a+b=\gamma\label{eq}
 \end{equation}
 
 Be sure that the 
-symbols in your equation have been defined before or immediately following 
+symbols in your equation have been defined before or immediately followindg 
 the equation. Use ``\eqref{eq}'', not ``Eq.~\eqref{eq}'' or ``equation \eqref{eq}'', except at 
 the beginning of a sentence: ``Equation \eqref{eq} is . . .''
 
@@ -130,12 +168,26 @@ Actuator                    & Servomotor MG995          & 4 servomotores \\ \hli
 
 The full implementation of the lumbar spine, can be seen in Fig. \ref{f:columna-completo}.
 
-Please note that the \verb|{subequations}| environment in {\LaTeX}
-will increment the main equation counter even when there are no
-equation numbers displayed. If you forget that, you might write an
-article in which the equation numbers skip from (17) to (20), causing
-the copy editors to wonder if you've discovered a new method of
-counting.
+Luego para realizar el control de posición fue necesario la consideración de los parámetros del giroscopio los cuales se detallan en la tabla \ref{tabla:gyroscope}
+
+\begin{table}
+	\centering
+	\caption{Propiedades del Giroscopio}
+	\label{tabla:gyroscope}
+	\begin{tabular}{|c|c|c|}
+		\hline
+		Genericas & Propiedad & Descripción \\ \hline
+		\multirow{3}{*}{Físicas} & Rango de Medición & grados por segundo (°/s) \\ \cline{2-3}
+								 & Precisión & La exactitud de la medición \\ \cline{2-3}
+								 & Sensibilidad & Variaciones de w en mV/°/s  \\ \hline
+		
+
+	\end{tabular}
+\end{table}
+
+
+Finalmente como se especifica en \cite{perez2024} las imágenes y tablas en \LaTeX cuenta con ciertos parámetros que aunque indispensable, no es necesario agregar o definir cada parámetro si no solo aquellos que sean necesarios.
+
 
 {\BibTeX} does not work by magic. It doesn't get the bibliographic
 data from thin air but from .bib files. If you use {\BibTeX} to produce a
