@@ -1,6 +1,6 @@
 clear all;
-num = [215.25];
-den = [1 31 215.25]; 
+num = [65];
+den = [1 2 65]; 
 sys = tf(num,den);
 
 t = linspace(0,10,1000);
