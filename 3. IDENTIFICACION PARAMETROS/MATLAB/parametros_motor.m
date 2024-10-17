@@ -10,7 +10,7 @@ denominador = [J*L (J*Ra + L*b) (b*Ra + Kb*Kt)];
 
 H = tf(numerador, denominador)
 
-t = linspace(0,10,1000);    
+t = linspace(0,10,10000);    
 u = ones(size(t));
 
 y1 = lsim(H,u,t);
