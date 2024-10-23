@@ -1,6 +1,6 @@
 clc, clear;
 load('datos.mat');
-plot(tiempo, voltaje, tiempo, freqAngular);
+plot(tiempo, voltaje, tiempo, velocidad);
 systemIdentification
 
 
