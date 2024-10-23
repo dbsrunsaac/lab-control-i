@@ -6,5 +6,5 @@ sys = tf(num,den);
 
 % Gráficando el LGR de la planta
 rlocus(sys);
-grid on;z
+grid on;
 title('Lugar Geométrico S. Subamortiguado');
