@@ -1,9 +1,11 @@
-clear all;
-num = [215.25];
-den = [1 31 215.25]; 
+clear, clc;
+Kp = 100000;
+num = [Kp*325];
+den = [1 20 325]; 
 sys = tf(num,den);
 
-t = linspace(0,0.8,1000);
+% Respuesta al escalon unitario
+t = linspace(0,10,1000);
 u = ones(size(t));
 
 y1 = lsim(sys,u,t);
