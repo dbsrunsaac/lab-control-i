@@ -1,0 +1,68 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{graphics} % for pdf, bitmapped graphics files
+\usepackage{subfig}
+\usepackage{subcaption}
+\usepackage{hyperref}
+\usepackage{academicons}
+\usepackage{xcolor}
+\usepackage{listings}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+		T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+% Gráficas en MATLAB
+\usepackage{tikz, pgfplots}
+% Color Enlace
+\definecolor{colorEnlace}{RGB}{0, 0, 0}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=colorEnlace,
+	citecolor=colorEnlace,
+	urlcolor=colorEnlace,
+	pdfauthor={Ruth Juana Espino Puma},
+	pdftitle={}
+}
+% Control 
+\usepackage{amsmath}
+\begin{document}
+	
+	\title{Experiencia N°4 - Diseño de Controlador PID}
+	% Ing. Diego Darcy Arredondo Huarac
+	\author{	
+		\IEEEauthorblockN{Ruth Juana Espino Puma - 184657\\
+		Davis Bremdow Salazar Roa - 200353}
+		\IEEEauthorblockA{Universidad Nacional de San Antonio Abad del Cusco}
+		\textit{Escuela Profesional de Ingeniería Electrónica}\\
+		\textit{Laboratorio de Control I}\\
+		184657 \\\\
+		Cusco, Perú
+	}
+	
+	\maketitle
+	
+	\begin{abstract}
+		The document outlines the design of a PID controller using the Ziegler-Nichols tuning method for an analog control system. The objectives include designing controllers for underdamped and overdamped cases, aiming to reduce overshoot and response time. For the underdamped case, calculations for parameters \( k_p \), \( k_i \), and \( k_d \) are based on a derived transfer function, with the system tuned to cut overshoot by half. For the overdamped case, similar calculations optimize response time. Simulations in MATLAB/Simulink demonstrate step and impulse responses, highlighting improvements in control. Additionally, the document presents PID circuit designs with specified resistor and capacitor values for each damping case, along with simulated output graphs for analysis.
+	\end{abstract}
+	
+	\begin{IEEEkeywords}
+		PID controller design, Ziegler-Nichols method, analog control system, underdamped response, overdamped response, transfer function, gain tuning, MATLAB/Simulink simulation, circuit design, response optimization
+	\end{IEEEkeywords}
+	
+	\section{Muestre las gráficas obtenidas con el Osciloscopio para el caso Subamortiguado y
+		Sobreamortiguado en lazo cerrado.}
+		
+	\section{¿La respuesta hallada en forma teórica es igual o similar al circuito implementado?}
+	
+	\section{Comente acerca del error de la señal de salida con respecto a la señal de entrada.}
+	
+	\bibliographystyle{IEEEtran}
+	\bibliography{biblio}
+\end{document}
