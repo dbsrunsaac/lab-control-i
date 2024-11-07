@@ -27,7 +27,7 @@
 	linkcolor=colorEnlace,
 	citecolor=colorEnlace,
 	urlcolor=colorEnlace,
-	pdfauthor={Ruth Juana Espino Puma},
+	pdfauthor={Ruth Juana Espino Puma, Davis Bremdow Salazar Roa},
 	pdftitle={}
 }
 % Control 
@@ -35,19 +35,29 @@
 \begin{document}
 	
 	\title{Experiencia N°4 - Diseño de Controlador PID}
-	% Ing. Diego Darcy Arredondo Huarac
-	\author{	
-		\IEEEauthorblockN{Ruth Juana Espino Puma - 184657\\
-		Davis Bremdow Salazar Roa - 200353}
-		\IEEEauthorblockA{Universidad Nacional de San Antonio Abad del Cusco}
-		\textit{Escuela Profesional de Ingeniería Electrónica}\\
-		\textit{Laboratorio de Control I}\\
-		184657 \\\\
-		Cusco, Perú
+	
+	\author{
+		\IEEEauthorblockN{Ing. Darcy Arredondo Huarac}
+		\IEEEauthorblockA{
+			Laboratorio de Control I\\
+			Cusco, Perú\\
+			diego.arredondo@unsaac.edu.pe}
+		\and
+		\IEEEauthorblockN{Ruth Juana Espino Puma}
+		\IEEEauthorblockA{
+			Estudiante de Ingeniería Electrónica \\
+			Cusco, Perú \\
+			184657@unsaac.edu.pe}
+		\and
+		\IEEEauthorblockN{Davis Bremdow Salazar Roa}
+		\IEEEauthorblockA{
+			Estudiante de Ingeniería Electrónica \\
+			Cusco, Perú \\
+			200353@unsaac.edu.pe
+		}
 	}
 	
 	\maketitle
-	
 	\begin{abstract}
 		The document outlines the design of a PID controller using the Ziegler-Nichols tuning method for an analog control system. The objectives include designing controllers for underdamped and overdamped cases, aiming to reduce overshoot and response time. For the underdamped case, calculations for parameters \( k_p \), \( k_i \), and \( k_d \) are based on a derived transfer function, with the system tuned to cut overshoot by half. For the overdamped case, similar calculations optimize response time. Simulations in MATLAB/Simulink demonstrate step and impulse responses, highlighting improvements in control. Additionally, the document presents PID circuit designs with specified resistor and capacitor values for each damping case, along with simulated output graphs for analysis.
 	\end{abstract}
@@ -55,13 +65,47 @@
 	\begin{IEEEkeywords}
 		PID controller design, Ziegler-Nichols method, analog control system, underdamped response, overdamped response, transfer function, gain tuning, MATLAB/Simulink simulation, circuit design, response optimization
 	\end{IEEEkeywords}
+	\section{\textbf{Informe Final}}
+	\subsection{\textbf{Muestre las gráficas obtenidas con el Osciloscopio para el caso Subamortiguado y Sobreamortiguado en lazo cerrado}}
 	
-	\section{Muestre las gráficas obtenidas con el Osciloscopio para el caso Subamortiguado y
-		Sobreamortiguado en lazo cerrado.}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.4\textwidth]{media/sub-respuesta-general.jpeg}
+		\caption{Comparación de la respuesta del sistemas - PID}
+		\label{fig:sub-respuesta-general}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.4\textwidth]{media/sub-sobrepico-104.jpeg}
+		\caption{Sobrepico del sistema subamortiguado - PID}
+		\label{fig:sub-sobrepico-104}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.4\textwidth]{media/sub-sobrepico-116}
+		\caption{Sobrepico del sistema subamortiguado sin PID}
+		\label{fig:sub-sobrepico-116}
+	\end{figure}
 		
-	\section{¿La respuesta hallada en forma teórica es igual o similar al circuito implementado?}
+	\subsection{\textbf{¿La respuesta hallada en forma teórica es igual o similar al circuito implementado?}}
 	
-	\section{Comente acerca del error de la señal de salida con respecto a la señal de entrada.}
+	Para realizar la comparación entre las respuestas del sistema será necesario definir de forma precisa la relación que se tiene entre las diferentes entradas para el circuito
+	
+	En la figura \ref{fig:sub-sobrepico-simulado} se puede apreciar la respuesta del sistema frente a una señal cuadrada siendo la señal de color verde la respuesta sin la compensación mediante PID y la naranja la señal de respuesta con el sobrepico disminuido al aplicar el control PID a la planta.
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.5\textwidth]{media/sub-sobrepico-simulado}
+		\caption{Respuesta del sistema subamortiguado en Multisim}
+		\label{fig:sub-sobrepico-simulado}
+	\end{figure}
+	
+	
+	
+	\subsection{\textbf{Comente acerca del error de la señal de salida con respecto a la señal de entrada}}
+	
+	\section{Conclusiones}
 	
 	\bibliographystyle{IEEEtran}
 	\bibliography{biblio}
