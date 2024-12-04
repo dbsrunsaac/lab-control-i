@@ -55,8 +55,8 @@ k=1.36;
 kt = kc*ka*k
 % LGR DEL SISTEMA
 sys_comp = tf( conv(kt*cero_catr,conv(cero_com, num)), conv(polo_catr, conv(polo_com,den)));
-sys_comp
 % rlocus(sys_comp);
+retro_sys_comp = feedback(sys_comp, 1);
 
 
 % Gráficando la respuesta del sistema
