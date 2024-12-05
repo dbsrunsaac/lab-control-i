@@ -256,10 +256,7 @@
 		rlocus(sistema);
 		subplot(2, 2, 3);
 		rlocus(sistemaRetro);
-		
-		% ================ =================== ================
 		% ================ PROBANDO EL SISTEMA ================
-		% ================ =================== ================
 		figure(2); %
 		tiempo_simulacion = 2;
 		subplot(2, 1, 1);
@@ -290,7 +287,6 @@
 		legend show;
 		grid on; 
 		hold off;
-		% Anadir titulo general 
 		sgtitle('Respuestas Sistema subamortiguado con Retroalimentacion Unitaria');
 	\end{lstlisting}
 	
@@ -359,9 +355,7 @@
 		subplot(2, 2, 3);
 		rlocus(sistemaRetro);
 		
-		% ================ =================== ================
 		% ================ PROBANDO EL SISTEMA ================
-		% ================ =================== ================
 		figure(2); %
 		tiempo_simulacion = 2;
 		subplot(2, 1, 1);
@@ -394,7 +388,6 @@
 		legend show;
 		grid on; 
 		hold off;
-		% Anadir titulo general 
 		sgtitle('Respuestas Sistema subamortiguado con Retroalimentacion Unitaria');
 		
 	\end{lstlisting}
@@ -402,6 +395,7 @@
 	En cada caso de forma general se muestran el lugar geométrico del sistema original, del sistema retroalimentado luego de aplicar en cascada el controlador PID y finalmente la respuesta del sistema frente al impulso unitario y el escalón unitario.
 	
 	\section{Mostrar las gráficas del ítem anterior, ¿Cuál es la explicación de estas graficas?}
+	\subsection{Controlador PD}
 	Como se puede apreciar en la figura \ref{fig:respuesta-sistema} se puede apreciar la respuesta del sistema frente a una excitación de entrada del tipo escalón e impulso unitario, 
 	
 	\begin{figure}[h]
@@ -412,6 +406,14 @@
 	\end{figure}
 	De la gráfica se puede apreciar que sistema original presenta un comportamiento subamortiguado típico, con oscilaciones iniciales notorias y un sobrepaso antes de estabilizarse y por otro lado el sistema original presenta un comportamiento subamortiguado típico, con oscilaciones iniciales notorias y un sobrepaso antes de estabilizarse y en la cual se puede apreciar una reducción el sobreimpulso y una aceleración en el tiempo de establecimiento.
 	
+	\subsection{Controlador PID}
+	La respuesta del sistema mediante el controlador PID se muestra en \ref{fig:respuesta-sistema-pid} y en la cual se puede apreciar que al igual que el controlador PD se logra reducir el sobrepico, sin embargo en este caso la respuesta es menos brusca debido a los ceros que se agregaron y el polo en el origen que permite inestabilizar el sistema generando una mayor oscilación y un mayor tiempo de establecimiento.
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.4\textwidth]{media/respuesta-sistema-pid.png}
+		\caption{Respuesta del sistema al escalón e impulso unitario}
+		\label{fig:respuesta-sistema-pid}
+	\end{figure}
 	\bibliographystyle{IEEEtran}
 	\bibliography{biblio}
 \end{document}
