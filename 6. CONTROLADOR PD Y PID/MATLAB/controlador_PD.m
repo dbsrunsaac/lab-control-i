@@ -1,14 +1,13 @@
 clear, clc;
 % Planta del sistema
 num = [325];
-den = [1 20 0];
+den = [1 20 325];
 
-plantaLA = tf(num, den)
-planta = feedback(plantaLA, 1);
+planta = tf(num, den)
 
 % Raices del sistema a lazo abierto
-raicesLA = roots(den);
-disp("RaicesLA :"+raicesLA);
+raicesPlanta = roots(den);
+disp("Raices Planta:"+raicesPlanta);
 
 wnInicial = sqrt(num(1));
 xiInicial = den(2)/(2*wnInicial);
@@ -21,7 +20,7 @@ disp(["Ts inicial: ", tsInicial]);
 fprintf("Nuevos parámetros\n\n");
 % Parámetros deseados
 mp = 6; % sobreimpulso
-ts = 0.6; % sobreimpulso
+ts = 0.20; % sobreimpulso
 errorTs =  abs(tsInicial-ts)*100/tsInicial; % El porcentaje de error entre los Ts (inicial y experimental)
 disp(["Error en el Ts: ", errorTs+"%"]);
 % Calculo de los nuevos parámetros
@@ -35,13 +34,12 @@ pd = -xi*wn +i*wn*sqrt(1 - xi^2);
 disp(["Polo deseado: ", pd]);
 
 % Definiendo el Controlador PD
-zeroPD = [1 9.22];
+zeroPD = [1 70.50];
 % Calculo de la ganancia
 ka = abs(evalfr(tf(den,zeroPD*num), pd));
 disp(["Ganancia PD: ", ka]);
-%Definiendo una ganancia
-k = 2.1
-Gr = k*ka*[1 9.22]
+% Definiendo ganancia
+Gr = 20*ka*zeroPD
 
 sistema = tf( Gr*num , den)
 
@@ -50,15 +48,16 @@ sistemaRetro = feedback(sistema,1)
 % Dibujando el LGR del sistema a lazo abierto
 figure(1); % Creando una figura
 subplot(2, 2, 1);
-rlocus(plantaLA);
-subplot(2, 2, 2);
 rlocus(planta);
-subplot(2, 2, 3);
+subplot(2, 2, 2);
 rlocus(sistema);
-subplot(2, 2, 4);
+subplot(2, 2, 3);
 rlocus(sistemaRetro);
 
-figure(2);
+% ================ =================== ================
+% ================ PROBANDO EL SISTEMA ================
+% ================ =================== ================
+figure(2); %
 tiempo_simulacion = 2;
 subplot(2, 1, 1);
 [resp_escalon_comp, t_escalon] = step(sistemaRetro, tiempo_simulacion);
@@ -90,6 +89,16 @@ grid on;
 hold off;
 % Añadir título general 
 sgtitle('Respuestas Sistema subamortiguado con Retroalimentación Unitaria');
+
+
+
+
+
+
+
+
+
+
 
 
 
