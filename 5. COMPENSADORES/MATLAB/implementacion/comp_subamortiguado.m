@@ -1,70 +1,147 @@
 clear, clc;
-
-% PLANTA
+% Planta del sistema
 num = [325];
 den = [1 20 325];
-planta  = tf(num, den);
+
+planta = tf(num, den);
+
+% Raices del sistema a lazo abierto
+raicesPlanta = roots(den);
+disp("Raices Planta:"+raicesPlanta);
+
+wnInicial = sqrt(num(1));
+xiInicial = den(2)/(2*wnInicial);
+tsInicial = 4/(wnInicial*xiInicial);
+mpInicial = 100*exp(-pi*xiInicial/(sqrt(1 - xiInicial^2)) );
+fprintf("Parámetros Iniciales\n\n");
+disp(["Freq. Natural Inicial: ", wnInicial]);
+disp(["Xi inicial: ", xiInicial]);
+disp(["Ts inicial: ", tsInicial]);
+disp(["Mp inicial: ", mpInicial]);
+
 % Valores de compensación
-mp = 6.18; % Reducir el sobrepico
+mp = mpInicial/2; % Reducir el sobrepico
 xi = -log(mp/100)/(sqrt(log(mp/100)^2 + pi^2));
-disp(["Xi: ", xi]);
-ts = 0.5; % Tiempo de establecimiento [s]
+
+ts = 0.2; % Tiempo de establecimiento [s]
 wn = 4/(xi*ts);
+fprintf("Nuevos parámetros\n\n");
+disp(["Xi: ", xi]);
 disp(["Freq Natural: ", wn]);
+disp(["Sobre Impulso deseado: ", mp]);
 raices_den = roots(den);
 
-% POLO DESEADO
-po = raices_den(1);
+% Polo deseado
+ps = raices_den(1);
+pd = -xi*wn + wn*sqrt(1-xi^2)*i;
+disp(["Polos Sistema: ",ps]);
 
-disp(["Polos Sistema: ",po]);
-ps = -xi*wn + wn*sqrt(1-xi^2)*i;
-
-disp(["Polo deseado: ", ps]);
+disp(["Polo deseado: ", pd]);
 
 % ================== COMPENSADOR ADELANTO ====================
-theta1 = atan((imag(ps)+imag(po))/(abs(real(po)) - abs(real(ps))))*180/pi;
-theta2 = 180 - atan( (imag(po) - imag(ps)) / (abs(real(po)) - abs(real(ps))))*180/pi;
-theta3 = atan(imag(ps)/(abs(real(po)) - abs(real(ps))))*180/pi;
-theta_com = 180 + theta3 - theta1 - theta2;
-disp(["Ang. Comp: ", theta_com]);
+disp("COMPENSADOR ADELANTO");
+distanciaAbscisas = abs( real(pd) - real(ps));
+angP1 = 180 - atan(abs( imag(pd) - imag(ps))/(distanciaAbscisas))*180/pi;
+angP2 = 180 - atan(abs(imag(pd) + imag(ps))/(distanciaAbscisas))*180/pi;
+angZ1 = 180 - atan(abs(imag(pd))/(distanciaAbscisas))*180/pi;
+angComp = -180 - angZ1 + angP1 + angP2;
+disp(["Ang. Comp: ", angComp]);
 
-cero_com = [1, -real(po)];
-polo_com = [1, -real(ps) + imag(ps)/(tan(theta_com*pi/180))];
+% Determinando el cero y el polo del compensador
+poloAdelanto = abs(real(pd)) + abs(imag(pd))/(tan((90 - abs(angComp))*pi/180));
+ceroAdelanto = [1, -real(ps)];
+poloAdelanto = [1, poloAdelanto];
 
-% Ganancia del compensador Kc
-kc = abs(evalfr(tf(conv(den, polo_com), conv(num, cero_com)), ps));
-disp(["Gan. Comp. Adelanto: ", kc]);
+fprintf("Zero Comp. Adelanto:");
+disp(ceroAdelanto);
+fprintf("Polo Comp. Adelanto:");
+disp(poloAdelanto);
+
+% Ganancia del compensador en adelanto
+
+ka = abs(evalfr(tf(conv(den, poloAdelanto), num*ceroAdelanto), pd));
+disp(["Gan. Comp. Adelanto: ", ka]);
 
 % FUNCIÓN DE TRANSFERENCIA DEL COMPENSADOR EN ADELANTO
-Gc = tf(cero_com, polo_com);
-Gc
+
+plantaAdelanto = tf(ka*num*ceroAdelanto, conv(poloAdelanto, den));
+plantaAdelantoRetro = feedback(plantaAdelanto, 1);
+compAdelanto = tf(ceroAdelanto, poloAdelanto)
+
+
+% ================== COMPENSADOR RETRASO ====================
+disp("COMPENSADOR RETRASO");
+% Parámetros iniciales Comp. Retraso
+T = 0.8;
+kpInicial = ka*ceroAdelanto(2)*num/(poloAdelanto(2)*den(3));
+essInicial = 1/(1 + kpInicial);
+disp(["ess Inicial: ", essInicial]);
+disp(["Kp Inicial: ", kpInicial]);
+disp(["Constante de Tiempo: ", T]);
+
+% Parámetros en retraso deseados
+fprintf("Parámetros deseados para el compensador en atras\n\n");
+
+ess = 0.01;
+kp = (1 - ess)/ess;
+B = kp/kpInicial;
+essError =  (abs(essInicial - ess)*100)/essInicial;
+disp(["kp: ", kp]);
+disp(["B: ", B]);
+disp(["Error ess: ", essError+"%"]);
+
+% Cero y Polo del Comp. Atraso
+
+ceroAtraso = [1 abs(real(pd))/T];
+poloAtraso = [1 abs(real(pd))/(B*T)];
+compAtraso = tf(ceroAtraso, poloAtraso);
+
+% Angulo agregado al LGR - Comp. Atraso
+angRP1 = 180 - atan( abs(imag(pd))/( abs( abs(real(pd)) - poloAtraso(2))))*180/pi;
+angRZ1 = 180 - atan( abs(imag(pd))/( abs( abs(real(pd)) - ceroAtraso(2))))*180/pi;
+
+angCompR = angRP1 - angRZ1;
+disp(["Angulo adicional retraso: ", angCompR]);
+
+% Ganancia del compensador atraso
+
+kat = abs( evalfr( tf( conv( conv(poloAdelanto, poloAtraso), den), ka*num*conv(ceroAdelanto, ceroAtraso))  , pd));
+disp(["Gan. Comp. Atraso: ", kat]);
+
+% Mostrando los ceros y los polos
+fprintf("Cero Comp. Atraso");
+disp(ceroAtraso);
+fprintf("Polo Comp. Atraso");
+disp(poloAtraso);
+compAtraso
+
+% PLANTA DEL SISTEMA ATRASO - ADELANTO
+
+plantaAtrasoAdelanto = tf(kat*ka*num*conv(ceroAdelanto, ceroAtraso), conv( conv(poloAdelanto, poloAtraso), den));
+
+plantaAtrasoAdelantoRetro = feedback(plantaAtrasoAdelanto, 1);
+
+% PLANTA, SISTEMA COMPENSADO
 planta
+plantaAdelanto
+plantaAtrasoAdelanto
 
-% ================== COMPENSADOR ATRASO ====================
-cero_catr = [1 -real(ps)*20];
-polo_catr = [1 0.0002];
-
-ka = abs(evalfr(tf( conv(conv(polo_catr,polo_com), den), conv(num*kc*cero_com,cero_catr)), ps));
-disp(["Gan. Comp. Atr: ", ka]);
-
-% FUNCIÓN DE TRANSFERENCIA DEL COMPENSADOR EN ATRASO
-Gatr = tf(cero_catr, polo_catr);
-Gatr
-
-k=1.36;
-kt = kc*ka*k
-% LGR DEL SISTEMA
-sys_comp = tf( conv(kt*cero_catr,conv(cero_com, num)), conv(polo_catr, conv(polo_com,den)));
-% rlocus(sys_comp);
-retro_sys_comp = feedback(sys_comp, 1);
+% GRAFICANDO EL LGR DEL SISTEMA
+figure(1);
+subplot(2, 2, 1);
+rlocus(planta);
+subplot(2, 2, 2);
+rlocus(plantaAdelantoRetro);
+subplot(2, 2, 3);
+rlocus(plantaAtrasoAdelantoRetro);
 
 
-% Gráficando la respuesta del sistema
-figure;
-sys_comp_retro = feedback(sys_comp, 1);
+% RESPUESTA DEL SISTEMA
 tiempo_simulacion = 2;
+
+figure(2);
 subplot(2, 1, 1);
-[resp_escalon_comp, t_escalon] = step(sys_comp_retro, tiempo_simulacion);
+[resp_escalon_comp, t_escalon] = step(plantaAtrasoAdelantoRetro, tiempo_simulacion);
 plot(t_escalon, resp_escalon_comp, 'b', 'DisplayName', 'Sistema Compensado');
 hold on;
 [resp_escalon_planta, t_escalon] = step(planta, tiempo_simulacion);
@@ -79,7 +156,7 @@ hold off;
 
 % Subgráfica 2: Respuesta al impulso 
 subplot(2, 1, 2); 
-[resp_impulso_comp, t_escalon] = impulse(sys_comp_retro, tiempo_simulacion);
+[resp_impulso_comp, t_escalon] = impulse(plantaAtrasoAdelantoRetro, tiempo_simulacion);
 plot(t_escalon, resp_impulso_comp, 'b', 'DisplayName', 'Sistema Compensado');
 hold on;
 [resp_impulso_planta, t_escalon] = impulse(planta, tiempo_simulacion);
@@ -93,6 +170,3 @@ grid on;
 hold off;
 % Añadir título general 
 sgtitle('Respuestas Sistema subamortiguado con Retroalimentación Unitaria');
-
-
-

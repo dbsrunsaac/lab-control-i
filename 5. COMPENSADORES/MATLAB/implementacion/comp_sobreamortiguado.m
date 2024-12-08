@@ -4,6 +4,21 @@ clear, clc;
 num = [440.75];
 den = [1 42 440.75];
 planta  = tf(num, den);
+
+% Parámetros iniciales del sistema
+raicesPlanta = roots(den);
+disp("Raices Planta:"+raicesPlanta);
+
+wnInicial = sqrt(num(1));
+xiInicial = den(2)/(2*wnInicial);
+tsInicial = 4/(wnInicial*xiInicial);
+mpInicial = 100*exp(-pi*xiInicial/(sqrt(1 - xiInicial^2)) );
+fprintf("Parámetros Iniciales\n\n");
+disp(["Freq. Natural Inicial: ", wnInicial]);
+disp(["Xi inicial: ", xiInicial]);
+disp(["Ts inicial: ", tsInicial]);
+disp(["Mp inicial: ", mpInicial]);
+
 % Valores de compensación
 xi = 0.8;
 ts = 0.19; % Reducir ts
