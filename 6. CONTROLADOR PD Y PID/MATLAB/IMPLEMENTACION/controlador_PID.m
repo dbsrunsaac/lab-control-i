@@ -8,19 +8,21 @@ planta = tf(num, den)
 % Raices del sistema a lazo abierto
 raicesPlanta = roots(den);
 disp("Raices Planta:"+raicesPlanta);
-
+ps = raicesPlanta(1)
 wnInicial = sqrt(num(1));
 xiInicial = den(2)/(2*wnInicial);
 tsInicial = 4/(wnInicial*xiInicial);
+mpInicial = 100*exp(-pi*xiInicial/(sqrt(1 - xiInicial^2)) );
 fprintf("Parámetros Iniciales\n\n");
 disp(["Freq. Natural Inicial: ", wnInicial]);
 disp(["Xi inicial: ", xiInicial]);
 disp(["Ts inicial: ", tsInicial]);
+disp(["Mp inicial: ", mpInicial]);
 
-fprintf("Nuevos parámetros\n\n");
 % Parámetros deseados
-mp = 6; % sobreimpulso
-ts = 0.20; % sobreimpulso
+fprintf("Nuevos parámetros\n\n");
+mp = mpInicial/2; % sobreimpulso
+ts = 0.12; % sobreimpulso
 errorTs =  abs(tsInicial-ts)*100/tsInicial; % El porcentaje de error entre los Ts (inicial y experimental)
 disp(["Error en el Ts: ", errorTs+"%"]);
 % Calculo de los nuevos parámetros
@@ -28,26 +30,42 @@ xi = -log(mp/100)/( sqrt(log(mp/100)^2 + pi^2) );
 wn = 4/(xi*ts);
 disp(["Xi: ", num2str(xi)]);
 disp(["Freq Natural: ", num2str(wn)]);
+disp(["Mp: ", mp]);
 
 % Calculo de los polos deseados
 pd = -xi*wn +i*wn*sqrt(1 - xi^2);
 disp(["Polo deseado: ", pd]);
 
-% Definiendo el Controlador PD
-zeroPID = [1 382.89];
+%================== CONTROLADOR PID =====================
+
+% Angulo de compensación 
+distanciaAbcisas = abs( real(pd) - real(ps))
+angP1 = 180 - atan(abs(imag(pd) - imag(ps))/(distanciaAbcisas))*180/pi;
+angP2 = 180 - atan((imag(pd) + imag(ps))/(distanciaAbcisas))*180/pi;
+angP3 = 180 - atan(imag(pd)/(abs(real(pd))))*180/pi;
+angZ1 = 180 - atan(imag(pd)/(distanciaAbcisas))*180/pi;
+angComp = -180 - angZ1 + angP1 + angP2 + angP3;
+disp(["Ang. Comp: ", angComp]);
+
+% CEROS Y POLO DEL CONTROLADOR PID
+zeroPID = [1 abs(real(pd)) + imag(pd)/(tan((90 - angComp)*pi/180))];
+zeroPID1 = [1 abs(real(ps))];
 poloPID = [1 0];
-zeroPID1 = [1 10];
 
 gcZero = num*conv(zeroPID, zeroPID1);
 gcPolo = conv(poloPID, den);
 
-% Calculo de la ganancia
+% Ganancia del sistema
 ka = abs(evalfr(tf(gcPolo,gcZero), pd));
+kp = 0.18*ka;
 disp(["Ganancia PD: ", ka]);
+disp(["Ganancia Proporcional total: ", kp]);
 
-% Definiendo ganancia
+pidCero = conv(ka*zeroPID, zeroPID1)
+zeroPID
+% CONTROLADOR
 
-sistema = tf(0.66*ka*gcZero, gcPolo )
+sistema = tf(kp*gcZero, gcPolo )
 
 sistemaRetro = feedback(sistema,1)
 

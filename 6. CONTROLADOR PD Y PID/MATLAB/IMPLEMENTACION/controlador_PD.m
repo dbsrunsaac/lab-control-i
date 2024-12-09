@@ -3,24 +3,26 @@ clear, clc;
 num = [325];
 den = [1 20 325];
 
-planta = tf(num, den)
+planta = tf(num, den);
 
 % Raices del sistema a lazo abierto
 raicesPlanta = roots(den);
 disp("Raices Planta:"+raicesPlanta);
-
+ps = raicesPlanta(1)
 wnInicial = sqrt(num(1));
 xiInicial = den(2)/(2*wnInicial);
 tsInicial = 4/(wnInicial*xiInicial);
+mpInicial = 100*exp(-pi*xiInicial/(sqrt(1 - xiInicial^2)) );
 fprintf("Parámetros Iniciales\n\n");
 disp(["Freq. Natural Inicial: ", wnInicial]);
 disp(["Xi inicial: ", xiInicial]);
 disp(["Ts inicial: ", tsInicial]);
+disp(["Mp inicial: ", mpInicial]);
 
-fprintf("Nuevos parámetros\n\n");
 % Parámetros deseados
-mp = 6; % sobreimpulso
-ts = 0.20; % sobreimpulso
+fprintf("Nuevos parámetros\n\n");
+mp = mpInicial/2; % sobreimpulso
+ts = 0.14; % sobreimpulso
 errorTs =  abs(tsInicial-ts)*100/tsInicial; % El porcentaje de error entre los Ts (inicial y experimental)
 disp(["Error en el Ts: ", errorTs+"%"]);
 % Calculo de los nuevos parámetros
@@ -28,18 +30,32 @@ xi = -log(mp/100)/( sqrt(log(mp/100)^2 + pi^2) );
 wn = 4/(xi*ts);
 disp(["Xi: ", num2str(xi)]);
 disp(["Freq Natural: ", num2str(wn)]);
+disp(["Mp: ", mp]);
 
 % Calculo de los polos deseados
 pd = -xi*wn +i*wn*sqrt(1 - xi^2);
 disp(["Polo deseado: ", pd]);
 
-% Definiendo el Controlador PD
-zeroPD = [1 70.50];
+% ======================== CONTROLADOR PD ==========================
+% Determinando el ángulo de compensación
+distanciaAbcisas = abs( real(pd) - real(ps) );
+angP1 = 180 - atan( (abs(imag(pd) - imag(ps)))/(distanciaAbcisas) )*180/pi;
+angP2 = 180 - atan( (abs(imag(pd) + imag(ps)))/(distanciaAbcisas) )*180/pi;
+angComp = -180 + angP1 + angP2;
+% Calculo del zero del controlador PD
+zeroPD = [1 abs(real(pd)) + imag(pd)/(tan((90-angComp)*pi/180))];
+disp(["Ang. Comp.: ", angComp]);
+
 % Calculo de la ganancia
-ka = abs(evalfr(tf(den,zeroPD*num), pd));
+ka = abs(evalfr(tf(den, zeroPD*num), pd));
+kp = 40*ka;
 disp(["Ganancia PD: ", ka]);
+disp(["Ganancia Proporcional Total: ", kp]);
+
+
 % Definiendo ganancia
-Gr = 20*ka*zeroPD
+Gr = kp*zeroPD;
+controladorPD = tf(zeroPD, 1)
 
 sistema = tf( Gr*num , den)
 
@@ -54,9 +70,7 @@ rlocus(sistema);
 subplot(2, 2, 3);
 rlocus(sistemaRetro);
 
-% ================ =================== ================
 % ================ PROBANDO EL SISTEMA ================
-% ================ =================== ================
 figure(2); %
 tiempo_simulacion = 2;
 subplot(2, 1, 1);
