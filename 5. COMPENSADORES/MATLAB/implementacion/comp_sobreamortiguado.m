@@ -108,13 +108,13 @@ plantaAdelanto
 plantaAtrasoAdelanto
 
 % DIBUJANDO EL LGR DEL SISTEMA
-% figure(1);
-% subplot(2, 2, 1);
-% rlocus(planta);
-% subplot(2, 2, 2);
-% rlocus(plantaAdelantoRetro);
-% subplot(2, 2, 3);
-% rlocus(plantaAtrasoAdelanto);
+figure(1);
+subplot(2, 2, 1);
+rlocus(planta);
+subplot(2, 2, 2);
+rlocus(plantaAdelantoRetro);
+subplot(2, 2, 3);
+rlocus(plantaAtrasoAdelanto);
 
 % Gráficando la respuesta del sistema
 figure(2);
